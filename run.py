@@ -32,7 +32,7 @@ def parse_response(response, name):
         print(response.content)
         print()
 
-    return json.loads(response.content)
+    return json.loads(response.content.decode("UTF-8"))
 
 
 # Authorize the account with the provided config credentials
