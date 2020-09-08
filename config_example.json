@@ -1,0 +1,21 @@
+{
+    "debug": false,
+    "cloudflare": {
+        "email": "",
+        "accountid": "",
+        "appkey": "",
+        "workername": ""
+    },
+    "b2": {
+        "bucket": {
+            "id": "",
+            "hostname": "",
+            "name": "",
+            "prefix": ""
+        },
+        "credentials": {
+            "id": "",
+            "key": ""
+        }
+    }
+}
