@@ -1,3 +1,5 @@
+#!/usr/bin/python3
+
 import requests
 import base64
 import json
@@ -10,17 +12,17 @@ CF_APIBASE = 'https://api.cloudflare.com/client/v4/'
 
 
 ### Configuraton ###
-with open("./config.json", "r") as config:
+with open('./config.json', 'r') as config:
     CONFIG = json.loads(config.read())
 
 
 ### Templates ###
-with open("./worker.js", "r") as template:
+with open('./worker.js', 'r') as template:
     if os.path.isfile('./response_additions.js'):
-        with open("./response_additions.js", "r") as additions:
-            TEMPLATE = template.read().replace("//<<ResponseAdditions>>", additions.read())
+        with open('./response_additions.js', 'r') as additions:
+            TEMPLATE = template.read().replace('//<<ResponseAdditions>>', additions.read())
     else:
-        TEMPLATE = template.read().replace("//<<ResponseAdditions>>", "")
+        TEMPLATE = template.read().replace('//<<ResponseAdditions>>', '')
 
 
 # Retrieve worker content template (with correct values)
@@ -37,7 +39,8 @@ def parse_response(response, name):
 
 # Authorize the account with the provided config credentials
 def b2_authorize_account():
-    authorization = 'Basic ' + base64.b64encode(CONFIG['b2']['credentials']['id'] + b':' + CONFIG['b2']['credentials']['key']).decode('UTF-8')
+    auth_credentials = bytes(CONFIG['b2']['credentials']['id'] + ':' + CONFIG['b2']['credentials']['key'], 'UTF-8')
+    authorization = 'Basic ' + base64.b64encode(auth_credentials).decode('UTF-8')
     response = requests.get(B2_APIBASE + '/b2api/v2/b2_authorize_account',
         headers = {'Authorization': authorization})
 
@@ -73,7 +76,7 @@ def cf_upload_worker(b2_download_token):
         'Content-Type': 'application/javascript'
     }
     response = requests.put(
-        "{}accounts/{}/workers/scripts/{}"
+        '{}accounts/{}/workers/scripts/{}'
             .format(CF_APIBASE, CONFIG['cloudflare']['accountid'], CONFIG['cloudflare']['workername']),
         headers = headers,
         data = b2_worker_contents(b2_download_token))
